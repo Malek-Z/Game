@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>2048 — Jeu de Réflexion (Beta)</title>
+		<link rel="stylesheet" th:href="@{/css/style.css}" />
+		<script th:src="@{/js/game.js}" defer></script>
+	</head>
+	<body>
+		<h1>2048</h1>
+		<p class="subtitle">Jeu de Réflexion · Spring MVC Project Beta</p>
+
+		<div class="player-section">
+			<label>👤</label>
+			<input type="text" id="pname" placeholder="Your name" maxlength="16" value="Player1" />
+			<button class="btn sec" onclick="saveGame()">💾 Save</button>
+			<button class="btn sec" onclick="loadGame()">📂 Load</button>
+		</div>
+
+		<div class="top-bar">
+			<div class="score-box">
+				<div class="lbl">Score</div>
+				<div class="val" id="sc">0</div>
+			</div>
+			<div class="score-box">
+				<div class="lbl">Best</div>
+				<div class="val" id="bs">0</div>
+			</div>
+			<div class="score-box">
+				<div class="lbl">Moves</div>
+				<div class="val" id="mv">0</div>
+			</div>
+			<button class="btn" onclick="newGame()">🔄 New</button>
+		</div>
+
+		<div class="level-bar">
+			<button class="lvl" id="lv1" onclick="setLevel(1)">🟢 Easy 3×3 · 1024</button>
+			<button class="lvl active" id="lv2" onclick="setLevel(2)">🟡 Medium 4×4 · 2048</button>
+			<button class="lvl" id="lv3" onclick="setLevel(3)">🔴 Hard 5×5 · 4096</button>
+		</div>
+
+		<div class="game-wrap" id="gw">
+			<div class="grid-bg" id="grid"></div>
+			<div class="overlay" id="ov">
+				<div class="em" id="ovEm">🏆</div>
+				<h2 id="ovTitle">You Win!</h2>
+				<p id="ovMsg" style="color: #aaa; font-size: 0.88rem; text-align: center"></p>
+				<button class="btn" onclick="newGame()">New Game</button>
+				<button class="btn sec" onclick="continueGame()">Keep Playing</button>
+			</div>
+		</div>
+
+		<p class="hint">⌨️ Arrow keys / WASD &nbsp;·&nbsp; 📱 Swipe</p>
+
+		<div class="lb-wrap">
+			<div class="lb-title">🏆 Leaderboard</div>
+			<div id="lb"></div>
+		</div>
+		<div class="notif" id="notif"></div>
+	</body>
+</html>
