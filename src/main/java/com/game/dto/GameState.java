@@ -13,7 +13,6 @@ public class GameState {
         this.win = win;
     }
 
-    // Getters are REQUIRED for Spring to convert this to JSON
     public String getBoardState() { return boardState; }
     public int getScore() { return score; }
     public boolean isGameOver() { return gameOver; }

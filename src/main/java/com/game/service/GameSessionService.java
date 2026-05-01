@@ -1,6 +1,7 @@
 package com.game.service;
 
 import com.game.model.GameSession;
+import com.game.model.Player;
 import com.game.repository.GameSessionRepository;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ public class GameSessionService {
 
     public GameSession findById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Game not found"));
+                .orElseThrow(() -> new RuntimeException("Game not found: " + id));
     }
 
     public List<GameSession> findAll() {
@@ -30,6 +31,10 @@ public class GameSessionService {
 
     public List<GameSession> findActiveGames() {
         return repository.findByFinishedFalse();
+    }
+
+    public List<GameSession> findByPlayer(Player player) {
+        return repository.findByPlayer(player);
     }
 
     public void delete(Long id) {
