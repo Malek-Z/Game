@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>2048 — Leaderboard</title>
+		<link rel="stylesheet" th:href="@{/resources/css/style.css}" />
+	</head>
+	<body>
+		<h1>2048</h1>
+		<p class="subtitle">Top Players</p>
+
+		<div class="lb-wrap">
+			<p class="lb-title" style="text-align: center; margin-bottom: 16px">Global Rankings</p>
+
+			<div th:each="p, stat : ${players}" class="lb-row">
+				<span class="rk" th:text="${stat.index + 1}"></span>
+				<span class="nm" th:text="${p.player.username}"></span>
+				<span class="sc" th:text="${p.score}"></span>
+			</div>
+
+			<div style="margin-top: 24px; text-align: center">
+				<a th:href="@{/menu}" class="btn" style="text-decoration: none">← Back to Menu</a>
+			</div>
+		</div>
+	</body>
+	<script th:src="@{/resources/js/game.js}" defer></script>
+</html>

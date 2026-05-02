@@ -3,8 +3,8 @@ package com.game.controller;
 import com.game.model.Player;
 import com.game.service.PlayerService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -13,6 +13,7 @@ public class AuthController {
 
     private final PlayerService playerService;
 
+    @Autowired
     public AuthController(PlayerService playerService) {
         this.playerService = playerService;
     }
@@ -21,7 +22,6 @@ public class AuthController {
 
     @GetMapping("/")
     public String indexPage(HttpSession session) {
-        // If already logged in, go straight to menu
         if (session.getAttribute("player") != null) {
             return "redirect:/menu";
         }
@@ -32,8 +32,8 @@ public class AuthController {
 
     @PostMapping("/register")
     public String register(
-            @RequestParam String username,
-            @RequestParam String password,
+            @RequestParam("username") String username,
+            @RequestParam("password") String password,
             RedirectAttributes redirectAttributes) {
 
         try {
@@ -49,8 +49,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public String login(
-            @RequestParam String username,
-            @RequestParam String password,
+            @RequestParam("username") String username,
+            @RequestParam("password") String password,
             HttpSession session,
             RedirectAttributes redirectAttributes) {
 

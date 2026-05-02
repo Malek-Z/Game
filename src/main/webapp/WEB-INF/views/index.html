@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>2048 — Login</title>
+		<link rel="stylesheet" th:href="@{/resources/css/style.css}" />
+	</head>
+	<body>
+		<h1>2048</h1>
+		<p class="subtitle">Merge · Think · Conquer</p>
+
+		<div class="login-card">
+			<h2>Welcome Back</h2>
+
+			<p th:if="${error}" class="msg-error" th:text="${error}" style="margin-bottom: 14px"></p>
+			<p th:if="${success}" class="msg-success" th:text="${success}" style="margin-bottom: 14px"></p>
+
+			<form th:action="@{/login}" method="post" style="display: flex; flex-direction: column; gap: 10px">
+				<input type="text" name="username" placeholder="Username" required />
+				<input type="password" name="password" placeholder="Password" required />
+				<button class="btn" type="submit" style="margin-top: 4px">Login</button>
+			</form>
+
+			<div class="login-divider">or</div>
+
+			<form th:action="@{/register}" method="post" style="display: flex; flex-direction: column">
+				<input type="hidden" name="username" id="reg_user" />
+				<input type="hidden" name="password" id="reg_pass" />
+				<button class="btn sec" type="submit" onclick="copyFields()">Create New Account</button>
+			</form>
+		</div>
+
+		<script>
+			function copyFields() {
+				document.getElementById("reg_user").value = document.getElementsByName("username")[0].value;
+				document.getElementById("reg_pass").value = document.getElementsByName("password")[0].value;
+			}
+		</script>
+		<script th:src="@{/resources/js/game.js}" defer></script>
+	</body>
+</html>

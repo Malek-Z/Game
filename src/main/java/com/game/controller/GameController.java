@@ -7,11 +7,13 @@ import com.game.service.GameService;
 import com.game.service.GameSessionService;
 import com.game.service.PlayerService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class GameController {
@@ -20,6 +22,7 @@ public class GameController {
     private final GameSessionService gameSessionService;
     private final PlayerService playerService;
 
+    @Autowired
     public GameController(
             GameService gameService,
             GameSessionService gameSessionService,
@@ -40,7 +43,8 @@ public class GameController {
     @GetMapping("/menu")
     public String menu(Model model, HttpSession session) {
         Player player = getPlayerOrNull(session);
-        if (player == null) return "redirect:/";
+        if (player == null)
+            return "redirect:/";
 
         Player freshPlayer = playerService.findById(player.getId());
         session.setAttribute("player", freshPlayer);
@@ -48,23 +52,37 @@ public class GameController {
         List<GameSession> savedGames = gameSessionService.findByPlayer(freshPlayer)
                 .stream()
                 .filter(g -> !g.isFinished())
-                .toList();
+                .collect(Collectors.toList());
+
+        int bestScore = gameSessionService.getBestScore(player);
 
         model.addAttribute("player", freshPlayer);
         model.addAttribute("savedGames", savedGames);
-        return "menu";   // templates/menu.html
+        model.addAttribute("bestScore", bestScore);
+        return "menu";
     }
 
     // ── POST /start → create new GameSession ─────────────────────────────
 
     @PostMapping("/start")
-    public String startGame(
-            @RequestParam(defaultValue = "4") int size,
-            @RequestParam(defaultValue = "2048") int target,
-            HttpSession session) {
+    public String startGame(@RequestParam("size") int size, HttpSession session) {
 
         Player player = getPlayerOrNull(session);
-        if (player == null) return "redirect:/";
+        if (player == null)
+            return "redirect:/";
+
+        int target;
+        switch (size) {
+            case 3:
+                target = 1024;
+                break;
+            case 5:
+                target = 4096;
+                break;
+            default: // الحجم 4
+                target = 2048;
+                break;
+        }
 
         GameSession game = new GameSession();
         game.setSize(size);
@@ -75,8 +93,7 @@ public class GameController {
         game.setPlayer(player);
 
         GameSession saved = gameSessionService.save(game);
-
-        session.setAttribute("gameId", saved.getId());     
+        session.setAttribute("gameId", saved.getId());
         return "redirect:/game";
     }
 
@@ -85,10 +102,12 @@ public class GameController {
     @GetMapping("/game")
     public String gamePage(Model model, HttpSession session) {
         Player player = getPlayerOrNull(session);
-        if (player == null) return "redirect:/";
+        if (player == null)
+            return "redirect:/";
 
         Long gameId = (Long) session.getAttribute("gameId");
-        if (gameId == null) return "redirect:/menu";
+        if (gameId == null)
+            return "redirect:/menu";
 
         GameSession game = gameSessionService.findById(gameId);
         model.addAttribute("game", game);
@@ -98,30 +117,26 @@ public class GameController {
 
     // ── POST /move → AJAX, returns JSON ──────────────────────────────────
 
-    @PostMapping("/move")
+    @PostMapping(value = "/move", produces = "application/json")
     @ResponseBody
-    public GameState move(@RequestParam String direction, HttpSession session) {
+    public GameState move(@RequestParam("direction") String direction, HttpSession session) {
         Long gameId = (Long) session.getAttribute("gameId");
         if (gameId == null) {
             return new GameState("", 0, true, false);
         }
 
         GameSession game = gameSessionService.findById(gameId);
-
         GameService.MoveResult result = gameService.move(
                 game.getBoardState(),
                 game.getSize(),
                 game.getTarget(),
                 direction,
-                game.getScore()
-        );
+                game.getScore());
 
         game.setBoardState(result.boardState);
         game.setScore(result.score);
-
         boolean ended = result.gameOver || result.win;
         game.setFinished(ended);
-
         gameSessionService.save(game);
 
         if (ended) {
@@ -149,19 +164,44 @@ public class GameController {
         return "redirect:/menu";
     }
 
+    // ── GET /resume/{id} → load game and redirect to /game ─────────────────
+
     @GetMapping("/resume/{id}")
-    public String resume(@PathVariable Long id, HttpSession session) {
+    public String resume(@PathVariable("id") Long id, HttpSession session) {
         Player player = getPlayerOrNull(session);
-        if (player == null) return "redirect:/";
+        if (player == null)
+            return "redirect:/";
 
         GameSession game = gameSessionService.findById(id);
 
-        // Security check: the session belongs to this player
         if (!game.getPlayer().getId().equals(player.getId())) {
             return "redirect:/menu";
         }
 
         session.setAttribute("gameId", game.getId());
         return "redirect:/game";
+    }
+
+    // ── POST /delete/{id} → delete game and go back to menu ─────────────────
+
+    @PostMapping("/delete/{id}")
+    public String deleteGame(@PathVariable("id") Long id, HttpSession session) {
+        Player player = getPlayerOrNull(session);
+        if (player == null) {
+            return "redirect:/";
+        }
+
+        GameSession game = gameSessionService.findById(id);
+
+        if (game.getPlayer().getId().equals(player.getId())) {
+            gameSessionService.delete(id);
+        }
+
+        Long currentGameId = (Long) session.getAttribute("gameId");
+        if (id.equals(currentGameId)) {
+            session.removeAttribute("gameId");
+        }
+
+        return "redirect:/menu";
     }
 }

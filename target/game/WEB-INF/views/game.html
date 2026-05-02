@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>2048 — Jeu de Réflexion</title>
+		<link rel="stylesheet" th:href="@{/resources/css/style.css}" />
+	</head>
+	<body>
+		<h1>2048</h1>
+		<p class="subtitle">2048</p>
+
+		<!-- ── Player bar ──────────────────────────────────────────────── -->
+		<div class="player-section">
+			<label>👤</label>
+			<span class="player-name" th:text="${player.username}">Player</span>
+			<a th:href="@{/leaderboard}" class="btn sec" style="text-decoration: none">🏆 Board</a>
+			<a th:href="@{/menu}" class="btn sec" style="text-decoration: none">🏠 Menu</a>
+			<form th:action="@{/logout}" method="post" style="display: inline">
+				<button class="btn sec">🚪 Logout</button>
+			</form>
+		</div>
+
+		<!-- ── Scores ─────────────────────────────────────────────────── -->
+		<div class="top-bar">
+			<div style="display: flex; gap: 10px">
+				<div class="score-box">
+					<div class="lbl">Score</div>
+					<div class="val" id="sc" th:text="${game.score}">0</div>
+				</div>
+				<div class="score-box">
+					<div class="lbl">Best</div>
+					<div class="val" id="bs" th:text="${player.highScore}">0</div>
+				</div>
+			</div>
+
+			<div class="score-box goal-box">
+				<div class="lbl">Goal</div>
+				<div class="val" style="color: var(--accent2)" th:text="${game.target}">2048</div>
+			</div>
+
+			<button class="btn" onclick="confirmNew()"><span style="font-size: 1.1rem">🔄</span> New</button>
+		</div>
+
+		<!-- ── Level badge ────────────────────────────────────────────── -->
+		<div class="level-bar">
+			<span class="lvl active" id="lvBadge">
+				<!-- set by JS based on size/target -->
+			</span>
+		</div>
+
+		<!-- ── Board ─────────────────────────────────────────────────── -->
+		<div class="game-wrap" id="gw">
+			<div class="grid-bg" id="grid"></div>
+			<div class="overlay" id="ov">
+				<div class="em" id="ovEm">🏆</div>
+				<h2 id="ovTitle">You Win!</h2>
+				<p id="ovMsg" style="color: #aaa; font-size: 0.88rem; text-align: center"></p>
+				<button class="btn" onclick="confirmNew()">New Game</button>
+				<button class="btn sec" onclick="continueGame()">Keep Playing</button>
+			</div>
+		</div>
+
+		<p class="hint">⌨️ Arrow keys / WASD &nbsp;·&nbsp; 📱 Swipe</p>
+
+		<!-- Save button (posts to /save) ──────────────────────────────── -->
+		<div style="margin-top: 12px; display: flex; gap: 10px; justify-content: center">
+			<button class="btn sec" onclick="saveAndMenu()">💾 Save &amp; Menu</button>
+		</div>
+
+		<div class="notif" id="notif"></div>
+
+		<!-- ── Inject server state for JS ────────────────────────────── -->
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+			const INIT_BOARD = /*[[${game.boardState}]]*/ "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0";
+			const INIT_SCORE = /*[[${game.score}]]*/ 0;
+			const INIT_SIZE = /*[[${game.size}]]*/ 4;
+			const INIT_TARGET = /*[[${game.target}]]*/ 2048;
+			const PLAYER_BEST = /*[[${player.highScore}]]*/ 0;
+			/*]]>*/
+		</script>
+		<script th:src="@{/resources/js/game.js}" defer></script>
+	</body>
+</html>

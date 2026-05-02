@@ -1,12 +1,15 @@
 C:\Users\tassili\Desktop\CNN\Game\src\main\java\com\game\repository\PlayerRepository.java
 C:\Users\tassili\Desktop\CNN\Game\src\main\java\com\game\controller\GameController.java
 C:\Users\tassili\Desktop\CNN\Game\src\main\java\com\game\repository\GameSessionRepository.java
+C:\Users\tassili\Desktop\CNN\Game\src\main\java\com\game\config\AppInitializer.java
+C:\Users\tassili\Desktop\CNN\Game\src\main\java\com\game\controller\LeaderboardController.java
+C:\Users\tassili\Desktop\CNN\Game\src\main\java\com\game\dto\LeaderboardDTO.java
+C:\Users\tassili\Desktop\CNN\Game\src\main\java\com\game\config\PersistenceConfig.java
 C:\Users\tassili\Desktop\CNN\Game\src\main\java\com\game\service\PlayerService.java
+C:\Users\tassili\Desktop\CNN\Game\src\main\java\com\game\config\WebConfig.java
 C:\Users\tassili\Desktop\CNN\Game\src\main\java\com\game\controller\AuthController.java
 C:\Users\tassili\Desktop\CNN\Game\src\main\java\com\game\model\GameSession.java
-C:\Users\tassili\Desktop\CNN\Game\src\main\java\com\game\GameApplication.java
 C:\Users\tassili\Desktop\CNN\Game\src\main\java\com\game\dto\GameState.java
 C:\Users\tassili\Desktop\CNN\Game\src\main\java\com\game\model\Player.java
 C:\Users\tassili\Desktop\CNN\Game\src\main\java\com\game\service\GameSessionService.java
-C:\Users\tassili\Desktop\CNN\Game\src\main\java\com\game\controller\LeaderboardController.java
 C:\Users\tassili\Desktop\CNN\Game\src\main\java\com\game\service\GameService.java

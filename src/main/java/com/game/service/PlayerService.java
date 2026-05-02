@@ -1,21 +1,25 @@
 package com.game.service;
 
+import com.game.dto.LeaderboardDTO;
 import com.game.model.Player;
 import com.game.repository.PlayerRepository;
+import com.game.repository.GameSessionRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PlayerService {
 
     private final PlayerRepository playerRepository;
+    private final GameSessionRepository GameSessionRepository;
 
-    public PlayerService(PlayerRepository playerRepository) {
+    public PlayerService(PlayerRepository playerRepository, GameSessionRepository GameSessionRepository) {
         this.playerRepository = playerRepository;
+        this.GameSessionRepository = GameSessionRepository;
     }
-
     // ── Register ──────────────────────────────────────────────────────────
 
     public Player register(String username, String password) {
@@ -41,16 +45,24 @@ public class PlayerService {
     // ── High Score ────────────────────────────────────────────────────────
 
     public void updateHighScore(Player player, int newScore) {
-        if (newScore > player.getHighScore()) {
-            player.setHighScore(newScore);
-            playerRepository.save(player);
+        Player dbPlayer = playerRepository.findById(player.getId())
+                .orElseThrow();
+
+        if (newScore > dbPlayer.getHighScore()) {
+            dbPlayer.setHighScore(newScore);
+            playerRepository.save(dbPlayer);
         }
     }
 
     // ── Leaderboard ───────────────────────────────────────────────────────
 
-    public List<Player> getLeaderboard() {
-        return playerRepository.findTop10ByOrderByHighScoreDesc();
+    public List<LeaderboardDTO> getLeaderboard() {
+        return GameSessionRepository.getBestScoresPerPlayer()
+                .stream()
+                .map(r -> new LeaderboardDTO(
+                        (Player) r[0],
+                        (Integer) r[1]))
+                .collect(Collectors.toList());
     }
 
     // ── General CRUD ──────────────────────────────────────────────────────

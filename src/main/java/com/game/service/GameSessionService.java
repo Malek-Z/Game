@@ -33,6 +33,11 @@ public class GameSessionService {
         return repository.findByFinishedFalse();
     }
 
+    public int getBestScore(Player player) {
+        Integer score = repository.findBestScoreByPlayer(player);
+        return score != null ? score : 0;
+    }
+
     public List<GameSession> findByPlayer(Player player) {
         return repository.findByPlayer(player);
     }

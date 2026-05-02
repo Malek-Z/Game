@@ -18,13 +18,14 @@ public class Player {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column(name = "high_score", nullable = false)
     private int highScore = 0;
 
     @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GameSession> sessions = new ArrayList<>();
 
-    public Player() {}
+    public Player() {
+    }
 
     public Player(String username, String password) {
         this.username = username;
@@ -33,17 +34,39 @@ public class Player {
 
     // ── Getters & Setters ──────────────────────────────────────────────────
 
-    public Long getId() { return id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    public String getUsername() {
+        return username;
+    }
 
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-    public int getHighScore() { return highScore; }
-    public void setHighScore(int highScore) { this.highScore = highScore; }
+    public String getPassword() {
+        return password;
+    }
 
-    public List<GameSession> getSessions() { return sessions; }
-    public void setSessions(List<GameSession> sessions) { this.sessions = sessions; }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public int getHighScore() {
+        return highScore;
+    }
+
+    public void setHighScore(int highScore) {
+        this.highScore = highScore;
+    }
+
+    public List<GameSession> getSessions() {
+        return sessions;
+    }
+
+    public void setSessions(List<GameSession> sessions) {
+        this.sessions = sessions;
+    }
 }
