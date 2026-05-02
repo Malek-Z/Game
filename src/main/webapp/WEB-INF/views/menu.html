@@ -74,16 +74,45 @@
 			</div>
 		</div>
 		<div id="deleteModal" class="modal">
-			<div class="modal-content glass">
-				<h3>⚠ Delete Save?</h3>
-				<p>This action cannot be undone.</p>
+			<div class="modal-content glass" style="text-align: center; padding: 25px">
+				<div style="font-size: 3rem; margin-bottom: 10px">⚠</div>
+				<h3 style="color: #fff; margin-bottom: 10px">Delete Save?</h3>
+				<p style="color: #ccc; margin-bottom: 25px">This action cannot be undone. Are you sure?</p>
 
-				<div class="modal-actions">
-					<button class="btn sec" onclick="closeModal()">Cancel</button>
-					<button class="btn" style="background: #e94560" onclick="confirmDelete()">Delete</button>
+				<div style="display: flex; gap: 12px; justify-content: center">
+					<button class="btn sec" onclick="closeDeleteModal()">Cancel</button>
+					<button class="btn" style="background: #e94560" onclick="confirmDelete()">Delete Now</button>
 				</div>
 			</div>
 		</div>
+		<script th:inline="javascript">
+			let formToSubmit = null;
+
+			function openDeleteModal(event, form) {
+				event.preventDefault();
+				formToSubmit = form;
+				document.getElementById("deleteModal").classList.add("show");
+				return false;
+			}
+
+			function closeDeleteModal() {
+				document.getElementById("deleteModal").classList.remove("show");
+				formToSubmit = null;
+			}
+
+			function confirmDelete() {
+				if (formToSubmit) {
+					formToSubmit.submit();
+				}
+			}
+
+			window.onclick = function (event) {
+				let modal = document.getElementById("deleteModal");
+				if (event.target == modal) {
+					closeDeleteModal();
+				}
+			};
+		</script>
 	</body>
 	<script th:src="@{/resources/js/game.js}" defer></script>
 </html>

@@ -236,23 +236,3 @@ gw.addEventListener(
 setLevelBadge();
 updateUI();
 render();
-
-let deleteForm = null;
-
-function openDeleteModal(event, form) {
-	event.preventDefault();
-	deleteForm = form;
-
-	document.getElementById("deleteModal").classList.add("show");
-	return false;
-}
-
-function closeModal() {
-	document.getElementById("deleteModal").classList.remove("show");
-}
-
-function confirmDelete() {
-	if (deleteForm) {
-		deleteForm.submit();
-	}
-}
